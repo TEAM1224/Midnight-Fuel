@@ -15,10 +15,12 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
 <<<<<<< HEAD
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1"
 =======
+    "react-router-dom": "^7.1.1",
     "react-redux": "^9.2.0"
->>>>>>> aa34ebff8cd973c00f0215853d1823a91eeeeb62
+>>>>>>> 92f7c7901a5e72a652e4c4fe9d60fa1325282b7b
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

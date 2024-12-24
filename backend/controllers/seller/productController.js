@@ -1,8 +1,10 @@
+const { authentication } = require("../../middleware/authMiddleware");
 const Product = require("../../model/productModel");
 
 const addProduct = async (req, res) => {
   try {
-    const {sellerId} = req.params;
+    
+    const {sellerId} = req.user;
     const { price, quantity } = req.body;
 
     if (!sellerId || !price || !quantity) {
@@ -87,7 +89,7 @@ const deleteProduct = async (req, res) => {
 };
 
 const fetchProduct = async (req, res) => {
-  const sellerId = req.params.sellerId;
+  const {sellerId} = req.user;
   const products = await Product.find({ sellerId });
   if (!products) {
     return res.status(404).json({ message: "No products found",success : false });
