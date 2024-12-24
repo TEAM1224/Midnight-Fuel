@@ -74,4 +74,27 @@ const editProduct = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, editProduct };
+const deleteProduct = async (req, res) => {
+  const productId = req.params.productId;
+  const product = await Product.findByIdAndDelete(productId);
+  if (!product) {
+    return res
+      .status(404)
+      .json({ message: "Product not found", success: false });
+  } else {
+    return res.status(200).json({ message: "Product deleted successfully",success : true });
+  }
+};
+
+const FetchProduct = async (req, res) => {
+  const sellerId = req.params.sellerId;
+  const products = await Product.find({ sellerId });
+  if (!products) {
+    return res.status(404).json({ message: "No products found",success : false });
+  } else {
+    return res.status(200).json({data : products ,success : true});
+  }
+};
+
+
+module.exports = { addProduct, editProduct ,FetchProduct,deleteProduct};
