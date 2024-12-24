@@ -3,6 +3,7 @@ import { listProduct } from './allProductName';
 
 function Listitems() {
   const [products, setProducts] = useState(listProduct);
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleDelete = (index) => {
     const updatedProducts = products.filter((_, i) => i !== index);
@@ -10,60 +11,84 @@ function Listitems() {
   };
 
   const handleUpdate = (index) => {
-    const updatedName = prompt('Enter new product name:', products[index].name);
-    const updatedQuantity = prompt('Enter new quantity:', products[index].quantity);
-    const updatedPrice = prompt('Enter new price:', products[index].price);
-
-    if (updatedName && updatedQuantity && updatedPrice) {
+    if (editIndex === index) {
       const updatedProducts = [...products];
       updatedProducts[index] = {
         ...updatedProducts[index],
-        name: updatedName,
-        quantity: parseInt(updatedQuantity, 10),
-        price: parseInt(updatedPrice, 10),
+        quantity: updatedProducts[index].quantity,
+        price: updatedProducts[index].price,
       };
       setProducts(updatedProducts);
+      setEditIndex(null); // Exit edit mode
+    } else {
+      setEditIndex(index); // Enter edit mode
     }
   };
 
+  const handleInputChange = (e, index, field) => {
+    const updatedProducts = [...products];
+    updatedProducts[index][field] = e.target.value;
+    setProducts(updatedProducts);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto mt-12 p-8 bg-white rounded-lg shadow-lg border border-gray-300">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Product List</h2>
-      <table className="table-auto w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Quantity</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Price</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{product.name}</td>
-              <td className="border border-gray-300 px-4 py-2">{product.quantity}</td>
-              <td className="border border-gray-300 px-4 py-2">${product.price}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => handleUpdate(index)}
-                    className="px-4 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 focus:outline-none"
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => handleDelete(index)}
-                    className="px-4 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="w-full h-screen p-8 bg-white rounded-lg shadow-lg border border-gray-300">
+      <h2 className="text-3xl font-semibold text-gray-800 mb-6">Product List</h2>
+
+      {/* Scrollable container for products */}
+      <div className="w-full h-full max-h-[80vh] overflow-y-auto">
+        {/* Container for each product */}
+        {products.map((product, index) => (
+          <div key={index} className="flex items-center justify-between border-b border-gray-300 py-6 text-xl">
+            <div className="flex-1">
+              <span className="font-medium">{product.name}</span>
+            </div>
+
+            <div className="flex-1">
+              {editIndex === index ? (
+                <input
+                  type="number"
+                  value={product.quantity}
+                  onChange={(e) => handleInputChange(e, index, 'quantity')}
+                  className="border border-gray-300 p-3 w-24 text-lg"
+                />
+              ) : (
+                product.quantity
+              )}
+            </div>
+
+            <div className="flex-1">
+              {editIndex === index ? (
+                <input
+                  type="number"
+                  value={product.price}
+                  onChange={(e) => handleInputChange(e, index, 'price')}
+                  className="border border-gray-300 p-3 w-32 text-lg"
+                />
+              ) : (
+                `$${product.price}`
+              )}
+            </div>
+
+            <div className="flex space-x-6">
+              <button
+                onClick={() => handleUpdate(index)}
+                className={`px-6 py-3 ${
+                  editIndex === index ? 'bg-green-500' : 'bg-yellow-500'
+                } text-white rounded-lg hover:bg-${editIndex === index ? 'green-600' : 'yellow-600'} focus:outline-none text-lg`}
+              >
+                {editIndex === index ? 'Save' : 'Edit'}
+              </button>
+              <button
+                onClick={() => handleDelete(index)}
+                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none text-lg"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
