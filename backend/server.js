@@ -43,5 +43,5 @@ app.listen(PORT, (err)=>{
     if(err)
     console.log(err);
     else
-    console.log("server started at ", PORT)
+    console.log("server started : ", PORT)
 })
