@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const sellerProductRoute = require('./routes/seller/productRoutes')
 
 
 const app = express();
@@ -36,9 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 
 
-app.use('/',(req,res)=>{
-    res.send("Api is Working");
-})
+app.use('/api/seller', sellerProductRoute)
 
 
 

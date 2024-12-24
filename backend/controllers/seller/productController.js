@@ -76,7 +76,7 @@ const editProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   const productId = req.params.productId;
-  const product = await Product.findByIdAndDelete(productId);
+  const product = await Product.findByIdAndDelete({_id : productId});
   if (!product) {
     return res
       .status(404)
@@ -86,7 +86,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const FetchProduct = async (req, res) => {
+const fetchProduct = async (req, res) => {
   const sellerId = req.params.sellerId;
   const products = await Product.find({ sellerId });
   if (!products) {
@@ -100,4 +100,4 @@ const FetchProduct = async (req, res) => {
 
 
 
-module.exports = { addProduct, editProduct ,FetchProduct,deleteProduct };
+module.exports = { addProduct, editProduct ,fetchProduct,deleteProduct };
