@@ -97,4 +97,9 @@ const FetchProduct = async (req, res) => {
 };
 
 
-module.exports = { addProduct, editProduct ,FetchProduct,deleteProduct};
+const tildProduct = async(req, res)=>{
+    return "baba ka dhaba"
+}
+
+
+module.exports = { addProduct, editProduct ,FetchProduct,deleteProduct, tildProduct };
