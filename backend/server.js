@@ -36,6 +36,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 
 
+app.use('/',(req,res)=>{
+    res.send("Api is Working");
+})
 
 
 
@@ -45,4 +48,3 @@ app.listen(PORT, (err)=>{
     else
     console.log("server started : ", PORT)
 })
-
