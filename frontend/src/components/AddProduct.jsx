@@ -1,28 +1,36 @@
 import React, { useState } from 'react';
 import { productName } from './allProductName';
+import { useDispatch, useSelector } from "react-redux"
+import { addProduct } from '../store/seller/productSlice';
+
+
 function AddProduct() {
+  const dispatch = useDispatch()
+  const { user } = useSelector(state => state.auth)
   const [product, setProduct] = useState({
     name: '',
     price: '',
     quantity: '',
-    file: null,
   });
 
-
   const handleChange = (e) => {
+    // console.log("handle change called")
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    console.log(name , value);
+    setProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
+
   };
 
-  const handleFileChange = (e) => {
-    setProduct({ ...product, file: e.target.files[0] });
-  };
+  // const handleFileChange = (e) => {
+  //   setProduct({ ...product, file: e.target.files[0] });
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Product Details:', product);
-    alert('Product saved successfully!');
-    setProduct({ name: '', price: '', quantity: '', file: null });
+    
+    dispatch(addProduct(product))
+    .then((data) => console.log(data))
+    
   };
 
   return (
@@ -83,7 +91,7 @@ function AddProduct() {
           type="submit"
           className="w-full py-3 text-lg bg-gray-800 text-white font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          Save
+          Add Product
         </button>
       </form>
     </div>

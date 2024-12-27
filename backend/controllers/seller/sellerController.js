@@ -3,16 +3,26 @@ const Seller = require('../../model/sellerModel');
 
 
 async function signupSeller(req, res) {
-    const { name, email, password, phone, address } = req.body;
-    console.log(req.body);
+    console.log("signupSeller");
+    const { name, email, password, phone, UID, hostel, room } = req.body;
+    
+    // console.log(typeOf (hostel), typeOf (room));
     try {
+        const existingSeller = await Seller.findOne({ email });
+        if(existingSeller){
+            return res.status(400).json({
+                success: false, 
+                message: "Seller already exists" 
+            });
+        }
         let seller = new Seller({
             name,
             email,
             password,
-            roll,
             phone,
-            avatar
+            UID,
+            hostel,
+            room,
             }
         );
         const sellerSaved = await seller.save();

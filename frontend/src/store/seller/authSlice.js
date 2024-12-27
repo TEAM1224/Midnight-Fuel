@@ -9,14 +9,14 @@ const initialState = {
 
 export const registerUser = createAsyncThunk('/register/user',
     async(formData)=>{
-        const response = await axios.post('http://localhost:4000/api/seller/auth/signup',formData);
+        const response = await axios.post('http://localhost:4000/api/seller/signup',formData);
 
         return response.data;
     }
 )
 export const loginUser = createAsyncThunk('/login/seller',
     async(formData)=>{
-        const response = await axios.post('http://localhost:4000/api/seller/auth/login',formData);
+        const response = await axios.post('http://localhost:4000/api/seller/login',formData);
 
         return response.data;
     }

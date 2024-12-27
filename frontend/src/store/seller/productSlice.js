@@ -17,8 +17,8 @@ export const fetchProduct = createAsyncThunk('/get-product',
 )
 
 export const addProduct = createAsyncThunk('/add',
-    async({formData, sellerId})=>{
-        const response = await axios.post(`http://localhost:4000/api/seller/${sellerId}`, formData)
+    async(formData)=>{
+        const response = await axios.post(`http://localhost:4000/api/seller/`, formData)
 
         return response?.data;
     }
