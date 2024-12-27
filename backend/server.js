@@ -8,9 +8,11 @@ const sellerRoute = require('./routes/seller/sellerRoutes');
 const { authentication } = require('./middleware/authMiddleware');
 
 
+
 const app = express();
 dotenv.config({path:"./config/config.env"});
 PORT = process.env.PORT || 4000;
+
 
 mongoose
   .connect(process.env.DB_URL)
