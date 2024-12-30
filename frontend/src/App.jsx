@@ -10,23 +10,21 @@ import {
 import AddProduct from './components/AddProduct';
 import Listitems from './components/Listitems';
 import Orders from './components/Orders';
+import Auth from './components/Auth';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="" element={<SellerDashboard />}>
-    <Route path="/addproduct" element={<AddProduct />} />
-    <Route path="/listitems" element={<Listitems />} />
-    <Route path="/orders" element={<Orders/>} />
-    {/* Main Routes */}
-    {/*<Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/home/:id" element={<ViewBlog/>} />
+    <>
+      {/* Independent Auth Route */}
+      <Route path="/auth" element={<Auth />} />
 
-      {/* Dashboard and Nested Routes }
-      <Route path="/dashboard" element={<Dashboad />}>
-        <Route path="createblog" element={<UploadPost />} />
-      </Route> */}
-    </Route>
+      {/* Seller Dashboard and other nested routes */}
+      <Route path="/" element={<SellerDashboard />}>
+        <Route path="addproduct" element={<AddProduct />} />
+        <Route path="listitems" element={<Listitems />} />
+        <Route path="orders" element={<Orders />} />
+      </Route>
+    </>
   )
 );
 

@@ -5,7 +5,7 @@ const addProduct = async (req, res) => {
   try {
     
     const {sellerId} = req.user;
-    const { price, quantity } = req.body;
+    const { price, quantity, name } = req.body;
 
     if (!sellerId || !price || !quantity) {
       return res.status(400).json({
@@ -15,6 +15,7 @@ const addProduct = async (req, res) => {
     }
 
     const newAddedProduct = new Product({
+      name,
       sellerId,
       price,
       totalStock: quantity,

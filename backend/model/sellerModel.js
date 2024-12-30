@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,
-    roll: Number,
+    role: {
+        type: String,
+        default: 'seller'
+    },
     password: String,
-    avatar: String,
     phone:Number,
+    UID: Number,
+    hostel: String,
+    room: String,
 });
 
 const userModel = new mongoose.model('Sellers',userSchema);

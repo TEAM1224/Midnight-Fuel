@@ -7,8 +7,12 @@ const sellerProductRoute = require('./routes/seller/productRoutes');
 const sellerRoute = require('./routes/seller/sellerRoutes');
 const { authentication } = require('./middleware/authMiddleware');
 
+<<<<<<< HEAD
+//mongodb+srv://SSR07:Atlas@07@cluster0.mvekzq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+=======
 
 
+>>>>>>> 7ebe23cb5bea947c8ec7a717b26927525c184af2
 const app = express();
 dotenv.config({path:"./config/config.env"});
 PORT = process.env.PORT || 4000;
