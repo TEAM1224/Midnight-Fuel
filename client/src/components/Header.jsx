@@ -4,8 +4,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [cartItemCount, setCartItemCount] = useState(0); // State to manage cart item count
-
+  const [cartItemCount, setCartItemCount] = useState(3); // State to manage cart item count
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +15,7 @@ function Header() {
 
     // Check the cart from localStorage (if applicable)
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    console.log("Cart Data:", cart); // Debugging line to check cart data
     setCartItemCount(cart.length);
   }, [localStorage.getItem("token")]);
 
@@ -38,9 +39,11 @@ function Header() {
 
   return (
     <header className="bg-slate-800 text-white shadow-lg">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between py-4 px-6">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between py-4 px-6 gap-4">
         {/* Logo Section */}
-        <h2 className="text-2xl font-bold mb-4 md:mb-0">MidNIGHT-FUEL</h2>
+        <NavLink to="/">
+          <h2 className="text-2xl font-bold mb-4 md:mb-0">MidNIGHT-FUEL</h2>
+        </NavLink>
 
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex-grow md:max-w-[500px] mx-6 w-full">
@@ -70,11 +73,11 @@ function Header() {
           {/* Cart Button */}
           <button
             onClick={handleCartClick}
-            className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow-md transition duration-300"
+            className="flex items-center space-x-2 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow-md transition duration-300 relative"
           >
-            🛒 Cart
+            <span>🛒 Cart</span>
             {cartItemCount > 0 && (
-              <span className="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-3 py-1 z-50 transform translate-x-1/2 -translate-y-1/2">
                 {cartItemCount}
               </span>
             )}
@@ -83,17 +86,11 @@ function Header() {
           {/* Logout or Login Button */}
           <button className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow-md transition duration-300">
             {isLoggedIn ? (
-              <NavLink
-                onClick={logout}
-                className="text-sm text-gray-300 hover:text-white px-3"
-              >
+              <NavLink onClick={logout} className="text-sm text-gray-300 hover:text-white px-3">
                 Logout
               </NavLink>
             ) : (
-              <NavLink
-                to="/login"
-                className="text-sm text-gray-300 hover:text-white px-3"
-              >
+              <NavLink to="/login" className="text-sm text-gray-300 hover:text-white px-3">
                 Login
               </NavLink>
             )}

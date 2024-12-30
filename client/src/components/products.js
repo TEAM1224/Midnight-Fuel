@@ -1,4 +1,4 @@
-export const data = [
+export const products = [
     {
       sellerId: 1,
       productId: "P101",
