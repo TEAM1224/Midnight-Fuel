@@ -1,87 +1,125 @@
-import React, { useState } from 'react';
-import { listProduct } from './allProductName';
+import React, { useEffect, useState } from "react";
+import { deleteProduct, fetchProduct, updateProduct } from "../store/seller/productSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 function Listitems() {
-  const [products, setProducts] = useState(listProduct);
+  const dispatch = useDispatch();
+  const [products, setProducts] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
 
-  const handleDelete = (index) => {
-    const updatedProducts = products.filter((_, i) => i !== index);
+  useEffect(() => {
+    dispatch(fetchProduct()).then((data) => {
+      if (data?.payload?.data) {
+        setProducts(data?.payload?.data);
+      }
+    });
+  }, [dispatch]);
+
+  const handleInputChange = (event, index, key) => {
+    const value = event.target.value;
+
+    const updatedProducts = [...products];
+    updatedProducts[index] = {
+      ...updatedProducts[index],
+      [key]: value,
+    };
     setProducts(updatedProducts);
   };
 
   const handleUpdate = (index) => {
-    if (editIndex === index) {
-      const updatedProducts = [...products];
-      updatedProducts[index] = {
-        ...updatedProducts[index],
-        quantity: updatedProducts[index].quantity,
-        price: updatedProducts[index].price,
-      };
-      setProducts(updatedProducts);
-      setEditIndex(null); // Exit edit mode
-    } else {
-      setEditIndex(index); // Enter edit mode
+    if (editIndex == null) setEditIndex(index);
+    else {
+      dispatch(
+        updateProduct({
+          productId: products[index]._id,
+          price: products[index].price,
+          quantity: products[index].totalStock,
+        })
+      ).then((data) => {
+        if (data?.payload?.success) {
+          toast.success(data?.payload?.message);
+          setEditIndex(null);
+        }
+      });
     }
   };
 
-  const handleInputChange = (e, index, field) => {
-    const updatedProducts = [...products];
-    updatedProducts[index][field] = e.target.value;
-    setProducts(updatedProducts);
+  const handleDelete = (index) => {
+    dispatch(deleteProduct(products[index]._id)).then((data) => {
+      if (data?.payload?.success) {
+        toast.success(data?.payload?.message);
+        setProducts(products.filter((product, i) => i !== index));
+      }
+    });
   };
 
   return (
-    <div className="w-full h-screen p-8 bg-white rounded-lg shadow-lg border border-gray-300">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-6">Product List</h2>
+    <div className="w-full h-screen p-4 md:p-8 bg-white rounded-lg shadow-lg border border-gray-300 overflow-hidden">
+      <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 mt-10">
+        Product List
+      </h2>
 
       {/* Scrollable container for products */}
-      <div className="w-full h-full max-h-[80vh] overflow-y-auto">
+      <div className="w-full h-full max-h-[80vh] overflow-x-auto overflow-y-auto">
+        {/* Column headers */}
+        <div className="flex items-center justify-between font-semibold text-lg md:text-xl py-4 border-b border-gray-300">
+          <div className="flex-1 min-w-[120px] text-center">Product</div>
+          <div className="flex-1 min-w-[120px] text-center">Quantity</div>
+          <div className="flex-1 min-w-[120px] text-center">Price</div>
+          <div className="flex-1 min-w-[160px] text-center">Actions</div>
+        </div>
+
         {/* Container for each product */}
-        {products.map((product, index) => (
-          <div key={index} className="flex items-center justify-between border-b border-gray-300 py-6 text-xl">
-            <div className="flex-1">
-              <span className="font-medium">{product.name}</span>
+        {products?.map((product, index) => (
+          <div
+            key={index}
+            className="flex items-center justify-between border-b border-gray-300 py-4 text-lg md:text-xl min-w-[480px]"
+          >
+            <div className="flex-1 min-w-[120px] text-center">
+              <span className="font-medium">{product?.productName}</span>
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 min-w-[120px] text-center">
               {editIndex === index ? (
                 <input
                   type="number"
-                  value={product.quantity}
-                  onChange={(e) => handleInputChange(e, index, 'quantity')}
-                  className="border border-gray-300 p-3 w-24 text-lg"
+                  value={product?.totalStock}
+                  onChange={(e) => handleInputChange(e, index, "totalStock")}
+                  className="border border-gray-300 p-2 w-20 md:w-24 text-base md:text-lg"
                 />
               ) : (
-                product.quantity
+                product?.totalStock
               )}
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 min-w-[120px] text-center">
               {editIndex === index ? (
                 <input
                   type="number"
                   value={product.price}
-                  onChange={(e) => handleInputChange(e, index, 'price')}
-                  className="border border-gray-300 p-3 w-32 text-lg"
+                  onChange={(e) => handleInputChange(e, index, "price")}
+                  className="border border-gray-300 p-2 w-24 md:w-32 text-base md:text-lg"
                 />
               ) : (
-                `$${product.price}`
+                `₹${product?.price} /-`
               )}
             </div>
 
-            <div className="flex space-x-6">
+            <div className="flex flex-1 min-w-[160px] justify-center space-x-4 md:space-x-6">
               <button
                 onClick={() => handleUpdate(index)}
-                className={`px-6 py-3 ${
-                  editIndex === index ? 'bg-green-500' : 'bg-yellow-500'
-                } text-white rounded-lg hover:bg-${editIndex === index ? 'green-600' : 'yellow-600'} focus:outline-none text-lg`}
+                className={`px-4 py-2 text-base md:text-lg ${
+                  editIndex === index ? "bg-green-500" : "bg-yellow-500"
+                } text-white rounded-lg hover:${
+                  editIndex === index ? "bg-green-600" : "bg-yellow-600"
+                } focus:outline-none`}
               >
-                {editIndex === index ? 'Save' : 'Edit'}
+                {editIndex === index ? "Save" : "Edit"}
               </button>
               <button
                 onClick={() => handleDelete(index)}
-                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none text-lg"
+                className="px-4 py-2 text-base md:text-lg bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none"
               >
                 Delete
               </button>
