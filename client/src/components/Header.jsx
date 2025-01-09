@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,14 +16,17 @@ function Header() {
 
     // Check the cart from localStorage (if applicable)
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    console.log("Cart Data:", cart); // Debugging line to check cart data
     setCartItemCount(cart.length);
   }, [localStorage.getItem("token")]);
 
   const logout = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false); // Update the state to reflect the logged-out status
-    navigate("/login"); // Redirect to login page
+    toast.success("Logout SuccessFull");
+    setTimeout(()=>{
+      navigate("/");
+      navigate("/login"); 
+      setIsLoggedIn(false);
+    },1000);
   };
 
   const handleSearch = (e) => {

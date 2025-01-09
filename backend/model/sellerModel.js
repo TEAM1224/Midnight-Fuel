@@ -1,17 +1,40 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
+    name:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
     role: {
         type: String,
         default: 'seller'
     },
-    password: String,
-    phone:Number,
-    UID: Number,
-    hostel: String,
-    room: String,
+    password:{
+        type:String,
+        required:true
+    },
+    phone:{
+        type:Number,
+        required:true
+
+    },
+    UID:{
+        type:Number,
+        required:true
+    },
+    hostel:{
+        type:String,
+        required:true
+    },
+    room:{
+        type:String,
+        required:true
+    },
 });
 
 const userModel = new mongoose.model('Sellers',userSchema);
