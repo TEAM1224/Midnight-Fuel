@@ -6,6 +6,7 @@ function Home() {
   // State to manage the cart
   const [cart, setCart] = useState([]);
 
+  // Fetch products from the Redux store
   const products = useSelector((state) => state.products);
 
   const [selectedHostel, setSelectedHostel] = useState("All");
@@ -41,20 +42,21 @@ function Home() {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">All Products</h1>
+    <div className="p-6 bg-slate-600 min-h-screen text-white">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">All Products</h1>
 
         {/* Hostel Filter Dropdown */}
         <div className="relative">
           <button
             onClick={toggleDropdown}
-            className="bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-900"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             Filter by Hostel
           </button>
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-md z-10">
+            <div className="absolute right-0 mt-2 w-48 bg-white text-gray-700 border rounded-lg shadow-md z-10">
               {hostels.map((hostel) => (
                 <button
                   key={hostel}
@@ -62,7 +64,7 @@ function Home() {
                     setSelectedHostel(hostel);
                     toggleDropdown();
                   }}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                 >
                   {hostel}
                 </button>
@@ -72,10 +74,15 @@ function Home() {
         </div>
       </div>
 
+      {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredData.map((product) => (
-          <Product key={product.productId} product={product} />
-        ))}
+        {filteredData.length > 0 ? (
+          filteredData.map((product) => (
+            <Product key={product.productId} product={product} addToCart={addToCart} />
+          ))
+        ) : (
+          <p className="col-span-full text-center text-lg">No products found.</p>
+        )}
       </div>
     </div>
   );
