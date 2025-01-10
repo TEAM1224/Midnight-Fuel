@@ -9,24 +9,34 @@ const initialState = {
 
 export const registerUser = createAsyncThunk('/register/user',
     async(formData)=>{
-        const response = await axios.post('http://localhost:4000/api/seller/signup',formData);
+        const response = await axios.post('http://localhost:4000/api/seller/signup',formData,
+        {withCredentials: true});
 
         return response.data;
     }
 )
 export const loginUser = createAsyncThunk('/login/seller',
     async(formData)=>{
-        const response = await axios.post('http://localhost:4000/api/seller/login',formData);
+        const response = await axios.post('http://localhost:4000/api/seller/login',formData,
+        {withCredentials: true});
 
-        return response.data;
+        return response?.data;
     }
 )
 
 export const logoutUser = createAsyncThunk('/logout/seller',
     async()=>{
-        const response = await axios.post('http://localhost:4000/api/seller/auth/logout')
+        const response = await axios.get('http://localhost:4000/api/seller/logout')
 
         return response.data;
+    }
+)
+
+export const resetPassword = createAsyncThunk('/resetPassword',
+    async(formData)=>{
+        const response = await axios.post(`http://localhost:4000/api/seller/reset-password`, formData)
+
+        return response?.data;
     }
 )
 
@@ -34,7 +44,9 @@ export const logoutUser = createAsyncThunk('/logout/seller',
 const authSlice = createSlice({
     name:"authSlice",
     initialState,
-    reducers:{},
+    reducers:{
+        
+    },
     extraReducers:(builder)=>{
         builder
         .addCase(registerUser.pending, (state)=>{

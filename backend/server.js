@@ -9,6 +9,9 @@ const userRouter = require('./routes/user/userRouters.js')
 const userProductRouter = require('./routes/user/userProductorRouter.js')
 const { authentication } = require('./middleware/authMiddleware');
 
+//mongodb+srv://SSR07:Atlas@07@cluster0.mvekzq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
 const app = express();
 dotenv.config({path:"./config/config.env"});
 PORT = process.env.PORT || 4000;
@@ -33,7 +36,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
-app.use('/api/seller', sellerProductRoute)
+app.use('/api/seller',sellerProductRoute)
 app.use('/api/seller',sellerRoute)
 app.use('/api/user',userRouter)
 app.use('/api/user',userProductRouter)

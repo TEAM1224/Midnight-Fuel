@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../store/seller/authSlice";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   // State for form values
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ const Auth = () => {
     phone: "",
     UID: "", // UID can be generated or provided
     hostel: "", // New field for hostel
-    room: "",   // New field for room
+    room: "", // New field for room
   });
 
   const toggleForm = () => setIsLogin(!isLogin);
@@ -34,32 +35,42 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
-      console.log("Logging in with:", formData);
-      dispatch(loginUser(formData))
-      .then((data) => {
-        console.log(data);
-        if(data?.payload?.success){
-            // Add success handling logic if necessary
-            toast.success(data?.payload?.message);
-            // console.log(data?.payload?.token)
-            localStorage.setItem('token', JSON.stringify(data?.payload?.token));
-            navigate('/')
+      // console.log("Logging in with:", formData);
+      dispatch(loginUser(formData)).then((data) => {
+        // console.log(data);
+        if (data?.payload?.success) {
+          // Add success handling logic if necessary
+          toast.success(data?.payload?.message);
+          // console.log(data?.payload?.token)
+          console.log(data.payload);
+          localStorage.setItem(
+            "authToken",
+            JSON.stringify(data?.payload?.token)
+          );
+          navigate("/seller/orders");
         }
-    });
+      });
     } else {
-      console.log("Signing up with:", formData);
-      dispatch(registerUser(formData))
-        .then((data) => {
-            console.log(data);
-            if(data?.payload?.success){
-                // Add success handling logic if necessary
-                toast.success(data?.payload?.message);
-                localStorage.setItem('token', JSON.stringify(data?.payload?.token));
-                navigate('/')
-            }
-        });
+      // console.log("Signing up with:", formData);
+      dispatch(registerUser(formData)).then((data) => {
+        // console.log(data);
+        if (data?.payload?.success) {
+          // Add success handling logic if necessary
+          toast.success(data?.payload?.message);
+          //console.log(data.payload.token);
+          localStorage.setItem(
+            "authToken",
+            JSON.stringify(data?.payload?.token)
+          );
+          navigate("/seller/addproduct");
+        }
+      });
     }
   };
+
+  const handleResetPassword = ()=>{
+    navigate("/seller/resetpassword")
+  }
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -95,13 +106,14 @@ const Auth = () => {
                   Password:
                 </label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Enter your Password"
-                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="mt-1 w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <p className="hover: cursor-pointer" onClick={handleResetPassword}>Forget Password</p>
               </div>
               <div>
                 <button

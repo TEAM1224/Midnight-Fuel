@@ -9,7 +9,8 @@ const initialState = {
 
 export const fetchProduct = createAsyncThunk('/get-product',
     async()=>{
-        const response = await axios.get(`http://localhost:4000/api/seller/get-product`)
+        const response = await axios.get(`http://localhost:4000/api/seller/get-products`,
+        {withCredentials: true})
 
         return response?.data;
     }
@@ -18,7 +19,8 @@ export const fetchProduct = createAsyncThunk('/get-product',
 
 export const addProduct = createAsyncThunk('/add',
     async(formData)=>{
-        const response = await axios.post(`http://localhost:4000/api/seller/`, formData)
+        const response = await axios.post('http://localhost:4000/api/seller/add', formData,
+        {withCredentials: true})
 
         return response?.data;
     }
@@ -27,11 +29,20 @@ export const addProduct = createAsyncThunk('/add',
 
 export const editProduct = createAsyncThunk('/edit-product',
     async({formData, productId})=>{
-        const response = await axios.put(`http://localhost:4000/api/seller/${productId}`, formData)
+        const response = await axios.put(`http://localhost:4000/api/seller/${productId}`, formData,
+        {withCredentials: true})
 
         return response?.data;
     }
 
+)
+
+export const updateProduct = createAsyncThunk('/update-product',
+    async({productId, price, quantity})=>{
+        const response = await axios.put(`http://localhost:4000/api/seller/edit/${productId}`,{price, quantity})
+
+        return response?.data;
+    }
 )
 
 export const deleteProduct = createAsyncThunk('/delete-product',
