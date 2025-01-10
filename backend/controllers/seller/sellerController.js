@@ -65,7 +65,7 @@ async function loginSeller(req, res) {
     }
     let seller = await Seller.findOne({ email, password });
     if (!seller) {
-      res.status(400).json({
+      return res.status(400).json({
         success: "false",
         message: "Invalid credentials",
       });
@@ -149,4 +149,4 @@ async function resetPassword(req, res){
 
 }
 
-module.exports = { signupSeller, loginSeller, logoutSeller, resetPassword };
+module.exports = { signupSeller, loginSeller, logoutSeller, resetPassword};

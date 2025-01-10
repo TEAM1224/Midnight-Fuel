@@ -49,7 +49,11 @@ const Auth = () => {
           );
           navigate("/seller/orders");
         }
-      });
+      })
+      .catch((error)=>{
+        console.log(error);
+        toast.error("invalid credentials")
+      })
     } else {
       // console.log("Signing up with:", formData);
       dispatch(registerUser(formData)).then((data) => {
