@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Cart from './components/Cart';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Orders from './components/Orders';
 
 
 const router = createBrowserRouter(
@@ -15,6 +16,7 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/orders" element={<Orders />} />
       {/* Dashboard and Nested Routes */}
     </Route>
   )
