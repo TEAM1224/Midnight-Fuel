@@ -49,6 +49,9 @@ const Auth = () => {
           );
           navigate("/seller/orders");
         }
+        else{
+          toast.error(data?.payload?.message);
+        }
       })
       .catch((error)=>{
         console.log(error);
@@ -62,11 +65,7 @@ const Auth = () => {
           // Add success handling logic if necessary
           toast.success(data?.payload?.message);
           //console.log(data.payload.token);
-          localStorage.setItem(
-            "authToken",
-            JSON.stringify(data?.payload?.token)
-          );
-          navigate("/seller/addproduct");
+          setIsLogin(true)
         }
       });
     }

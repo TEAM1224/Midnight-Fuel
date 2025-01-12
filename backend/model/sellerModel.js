@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    varified:{
+        type:Boolean,
+        default:false
+    }
 });
 
 const userModel = new mongoose.model('Sellers',userSchema);

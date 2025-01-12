@@ -36,7 +36,8 @@ function SellerDashboard() {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300`}
       >
-        <h2 className="text-2xl font-bold mb-6 mt-10">Dashboard</h2>
+        <h2
+        className="text-2xl font-bold mb-6 mt-10 cursor-pointer">Dashboard</h2>
 
         {/* Navigation */}
         <div className="flex flex-col space-y-4">
@@ -90,7 +91,6 @@ function SellerDashboard() {
           </button>
         </div>
       </aside>
-
       {/* Menu Button for Small Screens */}
       <button
         onClick={toggleSidebar}

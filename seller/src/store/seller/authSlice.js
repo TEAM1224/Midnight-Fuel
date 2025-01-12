@@ -21,14 +21,14 @@ export const registerUser = createAsyncThunk(
 );
 export const loginUser = createAsyncThunk("/login/seller", async (formData) => {
   try {
-    console.log(formData, "s");
+    // console.log(formData, "s");
     const response = await axios.post(
       "http://localhost:4000/api/seller/login",
       formData,
       { withCredentials: true }
     );
 
-    console.log("response", response);
+    // console.log("response", response);
     return response.data;
   } catch (error) {
     console.log(error);
