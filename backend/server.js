@@ -8,7 +8,7 @@ const sellerRoute = require('./routes/seller/sellerRoutes');
 const userRouter = require('./routes/user/userRouters.js')
 const userProductRouter = require('./routes/user/userProductorRouter.js')
 const adminRouter = require('./routes/admin/adminRoutes.js')
-// const adminControl = require('./routes/admin/controlRoutes.js')
+const adminControl = require('./routes/admin/controlRoutes.js')
 const { authentication } = require('./middleware/authMiddleware');
 
 //mongodb+srv://SSR07:Atlas@07@cluster0.mvekzq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
@@ -44,7 +44,7 @@ app.use('/api/seller',sellerRoute)
 app.use('/api/user',userRouter)
 app.use('/api/user',userProductRouter)
 app.use('/api/admin',adminRouter)
-// app.use('/api/admin',adminControl)
+app.use('/api/admin',adminControl)
 
 
 app.listen(PORT, (err)=>{

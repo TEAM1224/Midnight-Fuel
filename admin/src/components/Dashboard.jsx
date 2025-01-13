@@ -1,12 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getSeller, getUser } from "../store/admin/controlSlice";
 
 const Dashboard = () => {
-  // Example Data
-  const totalSellers = 120;
-  const totalUsers = 1500;
-  const newRequests = 35;
-  const totalActiveSellers = 100;
-  const totalActiveUsers = 1400;
+  const dispatch = useDispatch();
+
+  const [totalSellers, setTotalSellers] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [newRequests, setNewRequests] = useState(0);
+  const [totalActiveSellers, setTotalActiveSellers] = useState(0);
+  const [totalActiveUsers, setTotalActiveUsers] = useState(0);
+  const [sellerList, setSellerList] = useState([])
+  const [userList, setUserList] = useState([])
+
+  useEffect(() => {
+    const getData = () => {
+      dispatch(getUser())
+        .then((data) => {
+          if (data?.payload?.success) {
+            setTotalUsers(data.payload.data.length);
+            setUserList(data.payload.data)
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      dispatch(getSeller())
+        .then((data) => {
+          if (data?.payload?.success) {
+            // console.log(data.payload.data[0].varified);
+            const verifiedSeller = data.payload.data.filter((seller) => seller.varified == true)
+            const notVarifiedSeller = data.payload.data.filter((seller) => seller.varified == false)
+
+            setTotalSellers(verifiedSeller.length);
+            setNewRequests(notVarifiedSeller.length);
+
+            setSellerList(verifiedSeller);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    getData();
+  }, dispatch);
 
   return (
     <div className="p-6">
