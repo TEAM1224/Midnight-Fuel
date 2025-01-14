@@ -26,11 +26,15 @@ mongoose
     console.log("Failed to connect ", error);
   });
 
+
+
   const corsOptions = {
-    origin: "http://localhost:5173", // Replace with your frontend's origin
+    origin:["http://localhost:5173","http://localhost:5174"], // Replace with your frontend's origin
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "token"], // Add your custom headers here
+    credentials: true,  
   };
+  
   
 app.use(cors(corsOptions));
 app.use(cookieParser());
