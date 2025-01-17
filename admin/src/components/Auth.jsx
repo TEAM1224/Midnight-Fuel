@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginAdmin } from "../store/admin/authSlice";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
+
 
 const Auth = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const Auth = () => {
     dispatch(loginAdmin(formData))
       .then((data) => {
         if (data?.payload?.success) {
-          toast.success(data?.payload?.message);
+          toast.success(data.payload.message)
           navigate("/admin/dashboard");
         } else {
           toast.error(data?.payload?.message);

@@ -56,7 +56,8 @@ const signupAdmin = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  console.log(req.body)
+  // console.log(email, password);
   try {
     if (!email || !password) {
       return res.status(200).json({
@@ -65,10 +66,11 @@ const loginAdmin = async (req, res) => {
       });
     }
     // Check if admin exists
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({email});
+    console.log(admin)
     if (!admin) {
       return res
-        .status(400)
+        .status(200)
         .json({ 
           message: "Admin not found with this email.",
           success: false,
@@ -78,7 +80,7 @@ const loginAdmin = async (req, res) => {
     // Compare password
     // const isPasswordMatch = await bcrypt.compare(password, admin.password);
     if (password != admin.password) {
-      return res.status(400).json({ 
+      return res.status(200).json({ 
         message: "Incorrect password.",
         success: false,
       });
@@ -100,7 +102,7 @@ const loginAdmin = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ 
+    res.status(200).json({ 
       message: "Server error during login.",
       success: false,
     });
