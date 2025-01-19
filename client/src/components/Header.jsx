@@ -6,13 +6,17 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [cartItemCount, setCartItemCount] = useState(3); // State to manage cart item count
-  
+  const [ordersVis, setOrdersVis] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) setIsLoggedIn(true);
-    else setIsLoggedIn(false);
+    if (token) {
+      setIsLoggedIn(true);
+      setOrdersVis(true);
+    } else {
+      setIsLoggedIn(false);
+    }
 
     // Check the cart from localStorage (if applicable)
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -22,11 +26,11 @@ function Header() {
   const logout = () => {
     localStorage.removeItem("token");
     toast.success("Logout SuccessFull");
-    setTimeout(()=>{
+    setTimeout(() => {
       navigate("/");
-      navigate("/login"); 
+      navigate("/login");
       setIsLoggedIn(false);
-    },1000);
+    }, 1000);
   };
 
   const handleSearch = (e) => {
@@ -50,7 +54,10 @@ function Header() {
         </NavLink>
 
         {/* Search Bar */}
-        <form onSubmit={handleSearch} className="flex-grow md:max-w-[500px] mx-6 w-full">
+        <form
+          onSubmit={handleSearch}
+          className="flex-grow md:max-w-[500px] mx-6 w-full"
+        >
           <div className="relative">
             <input
               type="text"
@@ -73,6 +80,13 @@ function Header() {
           <button className="px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold shadow-md transition duration-300">
             <NavLink to="/becomeSeller">Become Seller</NavLink>
           </button>
+          {ordersVis ? (
+            <button className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow-md transition duration-300">
+              <NavLink to="/orders">Orders</NavLink>
+            </button>
+          ) : (
+            <div></div>
+          )}
 
           {/* Cart Button */}
           <button
@@ -90,11 +104,17 @@ function Header() {
           {/* Logout or Login Button */}
           <button className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow-md transition duration-300">
             {isLoggedIn ? (
-              <NavLink onClick={logout} className="text-sm text-gray-300 hover:text-white px-3">
+              <NavLink
+                onClick={logout}
+                className="text-sm text-gray-300 hover:text-white px-3"
+              >
                 Logout
               </NavLink>
             ) : (
-              <NavLink to="/login" className="text-sm text-gray-300 hover:text-white px-3">
+              <NavLink
+                to="/login"
+                className="text-sm text-gray-300 hover:text-white px-3"
+              >
                 Login
               </NavLink>
             )}

@@ -3,6 +3,7 @@ const Product = require("../../model/productModel");
 
 const addProduct = async (req, res) => {
   console.log("add product called ");
+  console.log(req.user);
   try {
     // console.log("add product called");
     // console.log("req. user : ", req.user);

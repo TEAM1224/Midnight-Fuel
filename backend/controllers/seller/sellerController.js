@@ -31,18 +31,18 @@ async function signupSeller(req, res) {
     });
     const sellerSaved = await seller.save();
     // console.log("ss: ", sellerSaved);
-    const token = createToken({ email, sellerId: sellerSaved._id });
-    res.cookie("authToken", token, {
-      httpOnly: true, // Makes the cookie inaccessible via JavaScript
-      secure: false, // Ensures cookie is sent over HTTPS (set to false for local development)
-      sameSite: "Strict", // Prevents CSRF attacks
-      maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
-    });
-    req.user = { sellerId: seller._id };
+    // const token = createToken({ email, sellerId: sellerSaved._id });
+    // res.cookie("authToken", token, {
+    //   httpOnly: true, // Makes the cookie inaccessible via JavaScript
+    //   secure: false, // Ensures cookie is sent over HTTPS (set to false for local development)
+    //   sameSite: "Strict", // Prevents CSRF attacks
+    //   maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
+    // });
+    // req.user = { sellerId: seller._id };
     res.status(201).json({
       success: "true",
-      data: seller,
-      token,
+      data: sellerSaved,
+      message: "Request sent to Admin"
     });
   } catch (err) {
     console.log("eror is ", err);
@@ -58,16 +58,22 @@ async function loginSeller(req, res) {
   // console.log('login',email, password)
   try {
     if(!email || !password){
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Email and password are required",
       });
     }
     let seller = await Seller.findOne({ email, password });
     if (!seller) {
-      res.status(400).json({
+      return res.status(200).json({
         success: "false",
         message: "Invalid credentials",
+      });
+    }
+    if(!seller.varified){
+      return res.status(200).json({
+        success: false,
+        message: "Seller is not varified Please wait..."
       });
     }
     const token = createToken({ email, sellerId: seller._id });
@@ -149,4 +155,4 @@ async function resetPassword(req, res){
 
 }
 
-module.exports = { signupSeller, loginSeller, logoutSeller, resetPassword };
+module.exports = { signupSeller, loginSeller, logoutSeller, resetPassword};

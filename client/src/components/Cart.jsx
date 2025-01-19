@@ -12,16 +12,19 @@ function Cart() {
   const backendUrl = useSelector((state) => state.backendUrl);
   // navigate
   const navigate = useNavigate();
+  useEffect(() => {
+    FetchCartItems();
+  },[]);
 
   useEffect(() => {
     const updatedCartItems = products.filter((product) => {
-      return cartData.some((item) => item.id == product.productId);
+      return cartData?.some((item) => item.id == product.productId);
     });
 
     setCartItems(updatedCartItems);
 
     let tempAmount = 0;
-    cartData.forEach((element) => {
+    cartData?.forEach((element) => {
       const product = products.find((item) => item.productId === element.id);
       if (product) {
         tempAmount += product.price * element.quantity;
@@ -63,9 +66,7 @@ function Cart() {
   };
   
 
-  useEffect(() => {
-    FetchCartItems();
-  },[]);
+ 
 
   // Function to handle quantity change (either increment or decrement)
   const handleQuantityChange = async(productId, newQuantity) => {
@@ -172,7 +173,7 @@ function Cart() {
         </ul>
       )}
 
-      {cartItems.length > 0 && (
+      {cartItems?.length > 0 && (
         <div className="mt-8 bg-gray-100 p-6 rounded-lg flex flex-col sm:flex-row justify-between items-center">
           <span className="text-xl font-semibold text-gray-800">
             Total: ₹{totalAmount}
