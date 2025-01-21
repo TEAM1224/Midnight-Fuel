@@ -8,6 +8,8 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default : 0
     },
+    hostelName:String,
+    roomNo:String
 },{timestamps: true})
 
 module.exports = mongoose.model("Product", productSchema);

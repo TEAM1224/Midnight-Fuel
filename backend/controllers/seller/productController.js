@@ -1,5 +1,6 @@
 const { authentication } = require("../../middleware/authMiddleware");
 const Product = require("../../model/productModel");
+const SelerModel = require('../../model/sellerModel');
 
 const addProduct = async (req, res) => {
   console.log("add product called ");
@@ -16,12 +17,15 @@ const addProduct = async (req, res) => {
         message: "insufficient Data",
       });
     }
-
+    const { hostel , room} = await SelerModel.find({_id : sellerId});
+    console.log(hostel , room);
     const newAddedProduct = new Product({
       productName: name,
       sellerId,
       price,
       totalStock: quantity,
+      hostelName:hostel,
+      roomNo:room
     });
 
     await newAddedProduct.save();
