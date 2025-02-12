@@ -11,13 +11,11 @@ const adminRouter = require('./routes/admin/adminRoutes.js')
 const adminControl = require('./routes/admin/controlRoutes.js')
 const { authentication } = require('./middleware/authMiddleware');
 
-//mongodb+srv://SSR07:Atlas@07@cluster0.mvekzq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
 
 const app = express();
 dotenv.config({path:"./config/config.env"});
 PORT = process.env.PORT || 4000;
-
+// console.log(process.env.DB_URL)
 
 mongoose
   .connect(process.env.DB_URL)
@@ -31,7 +29,7 @@ mongoose
   const corsOptions = {
     origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "token"], // Add your custom headers here
+    allowedHeaders: ["Content-Type", "Authorization", "token", "admintoken"], // Add your custom headers here
     credentials: true,
   };
   

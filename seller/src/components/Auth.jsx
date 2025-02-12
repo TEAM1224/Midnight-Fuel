@@ -37,12 +37,12 @@ const Auth = () => {
     if (isLogin) {
       // console.log("Logging in with:", formData);
       dispatch(loginUser(formData)).then((data) => {
-        // console.log(data);
-        if (data?.payload?.success) {
+        console.log(data);
+        if (data?.payload?.success == "true") {
           // Add success handling logic if necessary
           toast.success(data?.payload?.message);
-          // console.log(data?.payload?.token)
-          console.log(data.payload);
+          console.log(data?.payload?.token)
+          // console.log(data.payload);
           localStorage.setItem(
             "authToken",
             JSON.stringify(data?.payload?.token)
@@ -50,22 +50,26 @@ const Auth = () => {
           navigate("/seller/orders");
         }
         else{
+          console.log("message is " , data.payload.message);
           toast.error(data?.payload?.message);
         }
       })
       .catch((error)=>{
-        console.log(error);
+        console.log("shubham" , error);
         toast.error("invalid credentials")
       })
     } else {
       // console.log("Signing up with:", formData);
       dispatch(registerUser(formData)).then((data) => {
-        // console.log(data);
+        console.log(data);
         if (data?.payload?.success) {
           // Add success handling logic if necessary
           toast.success(data?.payload?.message);
           //console.log(data.payload.token);
           setIsLogin(true)
+        }
+        else{
+          toast.success(data.payload.message);
         }
       });
     }

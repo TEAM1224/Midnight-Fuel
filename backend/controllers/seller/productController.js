@@ -2,8 +2,8 @@ const { authentication } = require("../../middleware/authMiddleware");
 const Product = require("../../model/productModel");
 
 const addProduct = async (req, res) => {
-  console.log("add product called ");
-  console.log(req.user);
+  // console.log("add product called ");
+  // console.log(req.user);
   try {
     // console.log("add product called");
     // console.log("req. user : ", req.user);
@@ -41,7 +41,7 @@ const addProduct = async (req, res) => {
 };
 
 const editProduct = async (req, res) => {
-  console.log("edit called");
+  // console.log("edit called");
   try {
     const { productId } = req.params;
     const { price, quantity} = req.body;
