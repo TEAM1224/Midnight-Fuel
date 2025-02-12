@@ -22,7 +22,7 @@ function Product({ product }) {
       }
       const response = await axios.post(
         backendUrl + "/api/user/addtoCart",
-        { productId: product.productId },
+        { productId: product._id },
         {
           headers: {
             token
@@ -56,7 +56,7 @@ function Product({ product }) {
         <strong>Price:</strong> ₹{product.price}
       </p>
       <p className="text-sm text-gray-300 mb-4">
-        <strong>Quantity:</strong> {product.quantity}
+        <strong>TotalStock:</strong> {product.totalStock}
       </p>
 
       {/* Add to Cart Button */}

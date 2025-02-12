@@ -4,7 +4,7 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cartItems: [],
-        quantity: 0,
+        totalAmount:0,
     },
     reducers: {
         uploadCartItems: (state, action) => {
@@ -39,10 +39,13 @@ const cartSlice = createSlice({
                 product.quantity = quantity;
             }
             
+        },
+        updateTotalAmount(state,action){
+            state.totalAmount = action.payload;
         }
         
     },
 });
 
-export const { addCartItmes, removeCartItmes, updateCartItmes,uploadCartItems } = cartSlice.actions;
+export const { addCartItmes, removeCartItmes, updateCartItmes,uploadCartItems,updateTotalAmount } = cartSlice.actions;
 export default cartSlice.reducer;

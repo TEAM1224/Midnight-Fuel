@@ -55,7 +55,7 @@ async function signupSeller(req, res) {
 
 async function loginSeller(req, res) {
   const { email, password } = req.body;
-  // console.log('login',email, password)
+  //console.log('login',email, password)
   try {
     if(!email || !password){
       return res.status(200).json({

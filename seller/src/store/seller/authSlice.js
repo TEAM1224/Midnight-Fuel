@@ -28,10 +28,10 @@ export const loginUser = createAsyncThunk("/login/seller", async (formData) => {
       { withCredentials: true }
     );
 
-    // console.log("response", response);
+     //console.log("response", response);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("ERROR",error);
   }
 });
 

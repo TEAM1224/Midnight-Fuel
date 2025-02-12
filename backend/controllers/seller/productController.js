@@ -1,10 +1,10 @@
 const { authentication } = require("../../middleware/authMiddleware");
 const Product = require("../../model/productModel");
-const SelerModel = require('../../model/sellerModel');
+const SelerModel = require("../../model/sellerModel");
 
 const addProduct = async (req, res) => {
-  console.log("add product called ");
-  console.log(req.user);
+  //console.log("add product called ");
+  //console.log(req.user);
   try {
     // console.log("add product called");
     // console.log("req. user : ", req.user);
@@ -17,16 +17,18 @@ const addProduct = async (req, res) => {
         message: "insufficient Data",
       });
     }
-    const { hostel , room} = await SelerModel.find({_id : sellerId});
-    console.log(hostel , room);
+    const userDetails = await SelerModel.find({ _id: sellerId });
+    console.log(userDetails);
+    const { hostel, room } = userDetails[0];
     const newAddedProduct = new Product({
       productName: name,
       sellerId,
       price,
       totalStock: quantity,
-      hostelName:hostel,
-      roomNo:room
+      hostelName: hostel,
+      roomNo: room,
     });
+    console.log(newAddedProduct);
 
     await newAddedProduct.save();
 
@@ -48,7 +50,7 @@ const editProduct = async (req, res) => {
   console.log("edit called");
   try {
     const { productId } = req.params;
-    const { price, quantity} = req.body;
+    const { price, quantity } = req.body;
 
     if (!price || !quantity) {
       return res.status(400).json({
@@ -123,9 +125,26 @@ const fetchProduct = async (req, res) => {
   } catch (error) {
     console.log("fetch Product : ", error);
     res.status(400).json({
-      success: true
-    })
+      success: false,
+    });
   }
 };
 
-module.exports = { addProduct, editProduct, fetchProduct, deleteProduct };
+const fetchAllProduct = async (req, res) => {
+  try {
+    const products = await Product.find();
+    if (!products) {
+      return res
+        .status(400)
+        .json({ message: "No products found", success: false });
+    }
+    return res.status(200).json({ data: products, success: true });
+  } catch (error) {
+    console.log("fetchAllProduct : ", error);
+    res.status(400).json({
+      success: false,
+    });
+  }
+};
+
+module.exports = { addProduct, editProduct, fetchProduct, deleteProduct , fetchAllProduct};

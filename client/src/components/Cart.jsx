@@ -1,45 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import {
   removeCartItmes,
   updateCartItmes,
   uploadCartItems,
+  updateTotalAmount
 } from "../Slice/CartItemSlice";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
+import { fetchProducts } from "../Slice/ProductSlice";
+
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const cartData = useSelector((state) => state.cart.cartItems);
-  const products = useSelector((state) => state.products);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const products = useSelector((state) => state.products.items.data);
+  // const [totalAmount, setTotalAmount] = useState(0);
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
   const dispatch = useDispatch();
   const backendUrl = useSelector((state) => state.backendUrl);
-  // navigate
   const navigate = useNavigate();
+  
+  const getToken = () => localStorage.getItem("token");
+  // console.log(cartItems);
+  // console.log(cartData);
+  const fetchProduct = async () => {
+    await dispatch(fetchProducts());
+  };
   useEffect(() => {
+    fetchProduct();
     FetchCartItems();
   }, []);
 
+  // console.log(products[0]?._id);
   useEffect(() => {
-    const updatedCartItems = products.filter((product) => {
-      return cartData?.some((item) => item.id == product.productId);
+    const updatedCartItems = [];
+    let tempAmount = 0;
+    products?.forEach((product) => {
+      const cartItem = cartData.find((item) => item.id === product._id);
+      if (cartItem) {
+        updatedCartItems.push(product);
+        tempAmount += product.price * cartItem.quantity;
+      }
     });
 
     setCartItems(updatedCartItems);
-
-    let tempAmount = 0;
-    cartData?.forEach((element) => {
-      const product = products.find((item) => item.productId === element.id);
-      if (product) {
-        tempAmount += product.price * element.quantity;
-      }
-    });
-    setTotalAmount(tempAmount);
+    dispatch(updateTotalAmount(tempAmount));
   }, [cartData, products]);
 
   const FetchCartItems = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       if (!token) {
         console.error("No token found in localStorage");
         navigate("/login");
@@ -47,75 +58,63 @@ function Cart() {
       }
 
       const response = await axios.post(
-        `${backendUrl}/api/user/getUserCart`, // Use template literals for readability
+        `${backendUrl}/api/user/getUserCart`,
         {},
-        {
-          headers: {
-            token, // Use the token variable directly
-          },
-        }
+        { headers: { token } }
       );
 
       if (response.data.success) {
-        // Update Redux state with fetched cart items
         dispatch(uploadCartItems(response.data.cartData));
+        //console.log(response.data.cartData);
       } else {
         console.warn("FetchCartItems failed:", response.data.message);
         navigate("/login");
       }
     } catch (err) {
-      console.error(
-        "Error fetching cart items:",
-        err.response?.data || err.message
-      );
+      console.error("Error fetching cart items:", err.response?.data || err.message);
       navigate("/login");
     }
   };
 
-  // console.log(cartData);
-
-  // Function to handle quantity change (either increment or decrement)
   const handleQuantityChange = async (productId, newQuantity) => {
     if (newQuantity > 0) {
-      const response = await axios.post(
-        backendUrl + "/api/user/updateCartItems",
-        { productId, quantity: newQuantity },
-        {
-          headers: {
-            token: localStorage.getItem("token"),
-          },
+      try {
+        const response = await axios.post(
+          `${backendUrl}/api/user/updateCartItems`,
+          { productId, quantity: newQuantity },
+          { headers: { token: getToken() } }
+        );
+        if (response.data.success) {
+          dispatch(updateCartItmes({ id: productId, quantity: newQuantity }));
         }
-      );
-      if (response.data.success) {
-        dispatch(updateCartItmes({ id: productId, quantity: newQuantity }));
+      } catch (err) {
+        console.error("Error updating quantity:", err.response?.data || err.message);
       }
     }
   };
 
-  // Function to handle increment
   const incrementQuantity = (productId, currentQuantity) => {
     handleQuantityChange(productId, currentQuantity + 1);
   };
 
-  // Function to handle decrement
   const decrementQuantity = (productId, currentQuantity) => {
     if (currentQuantity > 1) {
       handleQuantityChange(productId, currentQuantity - 1);
     }
   };
+
   const deleteItems = async (productId) => {
-    const response = await axios.post(
-      backendUrl + "/api/user/removeCartItems",
-      { productId },
-      {
-        headers: {
-          token: localStorage.getItem("token"),
-        },
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/user/removeCartItems`,
+        { productId },
+        { headers: { token: getToken() } }
+      );
+      if (response.data.success) {
+        dispatch(removeCartItmes(productId));
       }
-    );
-    if (response.data.success) {
-      dispatch(removeCartItmes(productId));
-      toast.success(response.data.message);
+    } catch (err) {
+      console.error("Error removing item:", err.response?.data || err.message);
     }
   };
 
@@ -128,7 +127,7 @@ function Cart() {
         <ul className="space-y-6">
           {cartData.map((item) => {
             const productData = products.find(
-              (product) => product.productId === item.id
+              (product) => product._id === item.id
             );
             return (
               <li
@@ -138,14 +137,13 @@ function Cart() {
                 <div className="flex items-center space-x-6">
                   <div className="flex flex-col">
                     <span className="text-xl font-semibold text-gray-800">
-                      {productData.productName}
+                      {productData?.productName}
                     </span>
                     <span className="text-sm text-gray-500">
-                      Price: ₹{productData.price}
+                      Price: ₹{productData?.price}
                     </span>
                   </div>
                 </div>
-
                 <div className="flex items-center space-x-4 mt-4 sm:mt-0">
                   <button
                     onClick={() => decrementQuantity(item.id, item.quantity)}
@@ -158,7 +156,7 @@ function Cart() {
                     min="1"
                     value={item.quantity}
                     onChange={(e) =>
-                      handleQuantityChange(item.id, parseInt(e.target.value))
+                      handleQuantityChange(item.id, parseInt(e.target.value, 10))
                     }
                     className="w-16 p-2 border border-gray-300 rounded-md text-center"
                   />
@@ -169,10 +167,9 @@ function Cart() {
                     +
                   </button>
                 </div>
-
                 <div className="flex items-center space-x-4 mt-4 sm:mt-0">
                   <span className="text-lg font-semibold text-gray-800">
-                    {item.quantity} x ₹{productData.price}
+                    {item.quantity} x ₹{productData?.price}
                   </span>
                   <button
                     className="text-red-500 hover:text-red-700 text-sm font-semibold"
@@ -186,14 +183,14 @@ function Cart() {
           })}
         </ul>
       )}
-
       {cartItems?.length > 0 && (
         <div className="mt-8 bg-gray-100 p-6 rounded-lg flex flex-col sm:flex-row justify-between items-center">
           <span className="text-xl font-semibold text-gray-800">
             Total: ₹{totalAmount}
           </span>
-          <NavLink className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-300 mt-6 sm:mt-0"
-          to={"/orderPlaced"}
+          <NavLink
+            className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-300 mt-6 sm:mt-0"
+            to={"/orderPlaced"}
           >
             Proceed to Checkout
           </NavLink>

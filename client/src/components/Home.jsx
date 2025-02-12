@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux"; // Import useSelector
+import React, { useEffect, useState } from "react";
 import Product from "../components/Product";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from "../Slice/ProductSlice";
 function Home() {
   // State to manage the cart
   const [cart, setCart] = useState([]);
-
+  const dispatch = useDispatch();
   // Fetch products from the Redux store
-  const products = useSelector((state) => state.products);
-
+  const products = useSelector((state) => state.products.items.data);
+  // console.log(products.items.data);
+  
+  
   const [selectedHostel, setSelectedHostel] = useState("All");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -40,6 +42,10 @@ function Home() {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  useEffect(()=>{
+      dispatch(fetchProducts());
+  },[dispatch])
 
   return (
     <div className="p-6 bg-slate-600 min-h-screen text-white">
@@ -76,9 +82,9 @@ function Home() {
 
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredData.length > 0 ? (
+        {filteredData?.length > 0 ? (
           filteredData.map((product) => (
-            <Product key={product.productId} product={product} addToCart={addToCart} />
+            <Product key={product._id} product={product} addToCart={addToCart} />
           ))
         ) : (
           <p className="col-span-full text-center text-lg">No products found.</p>
