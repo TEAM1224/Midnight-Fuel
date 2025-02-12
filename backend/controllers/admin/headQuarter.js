@@ -53,4 +53,63 @@ const getUser = async(req, res)=>{
     }
 }
 
-module.exports = {getSeller, getUser}
+const verifySeller = async(req, res)=>{
+
+    try {
+        const {sellerId} = req.params;
+        const existSeller = await Seller.findOne({_id : sellerId});
+        if(!existSeller){
+            return res.status(200).json({
+                message: "Seller not found",
+                success: false,
+                data:[]
+            })
+        }
+        existSeller.varified = true;
+        await existSeller.save();
+        res.status(200).json({
+            message: "Seller verified",
+            success: true,
+            data: existSeller
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Internal Server Error",   
+            data: [],
+            success: false
+        })
+    }
+}
+
+//Reject Seller
+const rejectSeller = async(req, res)=>{
+    try {
+        const {sellerId} = req.params;
+        const existSeller = await Seller.deleteOne({_id : sellerId});
+        if(!existSeller){
+            return res.status(200).json({
+                message: "Seller not found",
+                success: false,
+                data:[]
+            })
+        }
+        
+        return res.status(200).json({
+            message: "Seller rejected",
+            success: true,
+            data: existSeller
+        })
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({
+            message: "Internal Server Error",   
+            data: [],
+            success: false
+        })
+    }
+
+}
+
+module.exports = {getSeller, getUser, verifySeller, rejectSeller}

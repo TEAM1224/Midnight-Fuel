@@ -9,15 +9,59 @@ const initialState = {
 
 export const getUser = createAsyncThunk('/getUser', 
     async()=>{
-        const response = await axios.post('http://localhost:4000/api/admin/get-users')
+        const response = await axios.post('http://localhost:4000/api/admin/get-users',
+            {},
+            {headers : {
+                adminToken : localStorage.getItem('adminToken'),
+            }},
+        )
         return response.data;
     }
 )
 
 export const getSeller = createAsyncThunk('/getseller',
     async()=>{
-        const response = await axios.post('http://localhost:4000/api/admin/get-sellers')
+        const response = await axios.post('http://localhost:4000/api/admin/get-sellers',{},
+            {headers : {
+                adminToken : localStorage.getItem('adminToken'),
+            }},
+        )
         return response.data;
+    }
+)
+
+export const verifySeller = createAsyncThunk('/verifySeler',
+    async(sellerId)=>{
+        try {
+            const response = await axios.post(`http://localhost:4000/api/admin/verify-seller/${sellerId}`,
+                {},
+                {headers : {
+                    adminToken : localStorage.getItem('adminToken'),
+                }},
+            )
+            return response.data;
+        } catch (error) {
+            console.log("error in verifySeller", error);
+            
+        }
+    }
+)
+
+export const rejectSeller = createAsyncThunk('/rejectSeller',
+    async(sellerId)=>{
+        console.log("reject seller ", sellerId);
+        try {
+            const response = await axios.post(`http://localhost:4000/api/admin/reject-seller/${sellerId}`,
+                {},
+                {headers : {
+                    adminToken : localStorage.getItem('adminToken'),
+                }},
+            )
+
+            return response.data;
+        } catch (error) {
+            console.log("error in rejectSeller ", error);
+        }
     }
 )
 

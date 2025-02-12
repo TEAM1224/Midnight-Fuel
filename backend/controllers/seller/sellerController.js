@@ -8,14 +8,15 @@ async function signupSeller(req, res) {
   // console.log(typeOf (hostel), typeOf (room));
   try {
     if(!name || !email || !password || !phone || !UID || !hostel || !room){
-      return res.status(400).json({ 
+      return res.status(200).json({ 
         message: "Please fill all the fields",
         success: false
       });
     }
     const existingSeller = await Seller.findOne({ email });
     if (existingSeller) {
-      return res.status(400).json({
+      console.log(existingSeller)
+      return res.status(200).json({
         success: false,
         message: "Seller already exists",
       });
@@ -46,7 +47,7 @@ async function signupSeller(req, res) {
     });
   } catch (err) {
     console.log("eror is ", err);
-    res.status(400).json({
+    res.status(200).json({
       success: "false",
       message: err,
     });
@@ -92,7 +93,7 @@ async function loginSeller(req, res) {
     });
   } catch (err) {
     console.log("eror is ", err);
-    res.status(400).json({
+    res.status(200).json({
       success: "false",
       message: err,
     });
@@ -113,7 +114,7 @@ async function logoutSeller(req, res) {
     })
   } catch (error) {
     console.log("logout seller: ", error);
-    res.status(400).json({
+    res.status(200).json({
       success: false,
     })
   }
@@ -124,7 +125,7 @@ async function resetPassword(req, res){
   console.log("reset called : ", email, UID, newPassword)
   try {
     if(!email || !UID || !newPassword){
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "insufficient Data",
       });
@@ -132,7 +133,7 @@ async function resetPassword(req, res){
 
     const userData = await Seller.findOne({email, UID});
     if(!userData){
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "User not found",
       });
@@ -148,7 +149,7 @@ async function resetPassword(req, res){
 
   } catch (error) {
     console.log("logout seller: ", error);
-    res.status(400).json({
+    res.status(200).json({
       success: false,
     })
   }

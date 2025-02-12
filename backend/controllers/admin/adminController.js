@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 // const { createToken } = require("../../config/jwt");
+const jwt = require("jsonwebtoken");
 const Admin = require("../../model/adminModel"); // Import the Admin model
 
 // Admin Signup
@@ -16,7 +17,8 @@ const signupAdmin = async (req, res) => {
   // Check if email already exists
   const existingAdmin = await Admin.findOne({ email });
   if (existingAdmin) {
-    return res.status(400).json({
+    // console.log("existing" , existingAdmin);
+    return res.status(200).json({
       message: "Admin already exists with this email.",
       success: false,
     });
@@ -42,7 +44,7 @@ const signupAdmin = async (req, res) => {
     // const token = createToken(newAdmin._id, email);
 
     // Respond with the token and admin details
-    res.status(201).json({
+    res.status(200).json({
       message: "Admin signed up successfully.",
       // token,
       data: newAdmin,
@@ -56,7 +58,7 @@ const signupAdmin = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body)
+  // console.log(req.body)
   // console.log(email, password);
   try {
     if (!email || !password) {
@@ -67,7 +69,7 @@ const loginAdmin = async (req, res) => {
     }
     // Check if admin exists
     const admin = await Admin.findOne({email});
-    console.log(admin)
+    // console.log(admin)
     if (!admin) {
       return res
         .status(200)
@@ -87,16 +89,16 @@ const loginAdmin = async (req, res) => {
     }
 
     // Generate JWT token
-    // const token = jwt.sign(
-    //   { adminId: admin._id, role: admin.role },
-    //   "your_jwt_secret_key", // Replace with your actual JWT secret key
-    //   { expiresIn: "1h" }
-    // );
+    const token = jwt.sign(
+      { adminId: admin._id, role: admin.role },
+      process.env.ADMIN_JWT_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
 
     // Respond with the token and admin details
     res.status(200).json({
       message: "Admin logged in successfully.",
-      // token,
+      token,
       data: admin,
       success: true,
     });

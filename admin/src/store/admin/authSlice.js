@@ -9,7 +9,7 @@ const initialState = {
 
 export const loginAdmin = createAsyncThunk("/login", async (formData) => {
   try {
-    console.log(formData);
+    console.log(localStorage.getItem('adminToken'));
     const response = await axios.post(
       "http://localhost:4000/api/admin/login",
       formData,
@@ -22,15 +22,20 @@ export const loginAdmin = createAsyncThunk("/login", async (formData) => {
   }
 });
 
-export const logoutAdmin = createAsyncThunk("/logout", async () => {
-  const response = await axios.get("http://localhost:4000/api/admin/logout");
-  return response?.data;
-});
+// export const logoutAdmin = createAsyncThunk("/logout", async () => {
+//   const response = await axios.get("http://localhost:4000/api/admin/logout");
+//   return response?.data;
+// });
 
 const authSlice = createSlice({
   name: "authSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutAdmin : (state)=>{
+      state.isAuthenticated = false;
+      state.user = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginAdmin.pending, (state) => {
@@ -51,4 +56,5 @@ const authSlice = createSlice({
   },
 });
 
+export const {logoutAdmin} = authSlice.actions
 export default authSlice.reducer;
