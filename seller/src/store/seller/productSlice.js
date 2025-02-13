@@ -48,11 +48,17 @@ export const updateProduct = createAsyncThunk('/update-product',
 export const deleteProduct = createAsyncThunk('/delete-product',
     async(productId)=>{
         const response = await axios.delete(`http://localhost:4000/api/seller/delete/${productId}`)
-
         return response?.data;
     }
 )
 
+export const fetchOrders = createAsyncThunk('/fectch All orders',
+    async()=>{
+        const response = await axios.get(`http://localhost:4000/api/seller/get-orders`,
+        {withCredentials: true})
+        return response?.data;
+    }
+)
 
 const sellerProductSlice = createSlice({
     name: "sellerProductSlice",
@@ -82,7 +88,14 @@ const sellerProductSlice = createSlice({
             state.isLoading = false;
             state.productsList = [];
         })
-
+        .addCase(fetchOrders.rejected,(state)=>{
+            state.isLoading = false;
+            state.ordersList = [];
+        })
+        .addCase(fetchOrders.fulfilled, (state, action)=>{
+            state.isLoading = false;
+            state.ordersList = action.payload.data;
+        })
     }
 })
 

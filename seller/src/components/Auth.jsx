@@ -9,7 +9,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-
+  const hostels = ["Aryabhatta", "Chanakya", "Sarabhai", "Bose", "Trisha", "Kalpana", "Gargi"];
   // State for form values
   const [formData, setFormData] = useState({
     name: "",
@@ -36,28 +36,28 @@ const Auth = () => {
     e.preventDefault();
     if (isLogin) {
       // console.log("Logging in with:", formData);
-      dispatch(loginUser(formData)).then((data) => {
-        console.log(data);
-        if (data?.payload?.success == "true") {
-          // Add success handling logic if necessary
-          toast.success(data?.payload?.message);
-          console.log(data?.payload?.token)
-          // console.log(data.payload);
-          localStorage.setItem(
-            "authToken",
-            JSON.stringify(data?.payload?.token)
-          );
-          navigate("/seller/orders");
-        }
-        else{
-          console.log("message is " , data.payload.message);
-          toast.error(data?.payload?.message);
-        }
-      })
-      .catch((error)=>{
-        console.log("shubham" , error);
-        toast.error("invalid credentials")
-      })
+      dispatch(loginUser(formData))
+        .then((data) => {
+          console.log(data);
+          if (data?.payload?.success == "true") {
+            // Add success handling logic if necessary
+            toast.success(data?.payload?.message);
+            console.log(data?.payload?.token);
+            // console.log(data.payload);
+            localStorage.setItem(
+              "authToken",
+              JSON.stringify(data?.payload?.token)
+            );
+            navigate("/seller/orders");
+          } else {
+            console.log("message is ", data.payload.message);
+            toast.error(data?.payload?.message);
+          }
+        })
+        .catch((error) => {
+          console.log("shubham", error);
+          toast.error("invalid credentials");
+        });
     } else {
       // console.log("Signing up with:", formData);
       dispatch(registerUser(formData)).then((data) => {
@@ -66,18 +66,17 @@ const Auth = () => {
           // Add success handling logic if necessary
           toast.success(data?.payload?.message);
           //console.log(data.payload.token);
-          setIsLogin(true)
-        }
-        else{
+          setIsLogin(true);
+        } else {
           toast.success(data.payload.message);
         }
       });
     }
   };
 
-  const handleResetPassword = ()=>{
-    navigate("/seller/resetpassword")
-  }
+  const handleResetPassword = () => {
+    navigate("/seller/resetpassword");
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -120,7 +119,12 @@ const Auth = () => {
                   placeholder="Enter your Password"
                   className="mt-1 w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
-                <p className="hover: cursor-pointer" onClick={handleResetPassword}>Forget Password</p>
+                <p
+                  className="hover: cursor-pointer"
+                  onClick={handleResetPassword}
+                >
+                  Forget Password
+                </p>
               </div>
               <div>
                 <button
@@ -226,13 +230,11 @@ const Auth = () => {
                   className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                   <option value="">Select your Hostel</option>
-                  <option value="Aryabhatta">Aryabhatta</option>
-                  <option value="Chanakya">Chanakya</option>
-                  <option value="Sarabhai">Sarabhai</option>
-                  <option value="Bose">Bose</option>
-                  <option value="Trisha">Trisha</option>
-                  <option value="Kalpana">Kalpana</option>
-                  <option value="Gargi">Gargi</option>
+                  {hostels.map((hostel) => (
+                    <option key={hostel} value={hostel}>
+                      {hostel}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>

@@ -1,4 +1,5 @@
 const { authentication } = require("../../middleware/authMiddleware");
+const ordersModel = require("../../model/ordersModel");
 const Product = require("../../model/productModel");
 const SelerModel = require("../../model/sellerModel");
 
@@ -11,6 +12,8 @@ const addProduct = async (req, res) => {
     // console.log("add product called");
     // console.log("req. user : ", req.user);
     const { sellerId } = req.user;
+    console.log(sellerId);
+
     const { price, quantity, name } = req.body;
 
     if (!sellerId || !price || !quantity) {
@@ -20,7 +23,7 @@ const addProduct = async (req, res) => {
       });
     }
     const userDetails = await SelerModel.find({ _id: sellerId });
-    console.log(userDetails);
+    // console.log(userDetails);
     const { hostel, room } = userDetails[0];
     const newAddedProduct = new Product({
       productName: name,
@@ -30,7 +33,7 @@ const addProduct = async (req, res) => {
       hostelName: hostel,
       roomNo: room,
     });
-    console.log(newAddedProduct);
+    // console.log(newAddedProduct);
 
     await newAddedProduct.save();
 
@@ -148,5 +151,69 @@ const fetchAllProduct = async (req, res) => {
     });
   }
 };
+const allorders = async (req, res) => {
+  // console.log(req);
 
-module.exports = { addProduct, editProduct, fetchProduct, deleteProduct , fetchAllProduct};
+  try {
+    const { sellerId } = req.user;
+    const orders = await ordersModel.find({ sellerId });
+    if (!orders) {
+      return res
+        .status(400)
+        .json({ message: "No orders found", success: false });
+    }
+    return res.status(200).json({ data: orders, success: true });
+  } catch (error) {
+    console.log("allorders : ", error);
+    res.status(400).json({
+      success: false,
+    });
+  }
+};
+
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderStatus } = req.body;
+
+    // Update order status
+    const updatedOrder = await ordersModel.findByIdAndUpdate(
+      req.params.id,
+      { orderStatus },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Fetch productId and quantity after order update
+    const order = await ordersModel.findOne({ _id: req.params.id });
+    if (!order) {
+      return res.status(404).json({ message: "Order details not found" });
+    }
+    const { productId, quantity } = order;
+
+    // Update product quantity function
+    const updateProductQuantity = async (productId, quantity) => {
+      return await Product.updateOne({ _id: productId }, { $inc: { quantity: -quantity } });
+    };
+
+    await updateProductQuantity(productId, quantity);
+
+    res.status(200).json({ message: "Order status updated", order: updatedOrder });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+module.exports = {
+  addProduct,
+  editProduct,
+  fetchProduct,
+  deleteProduct,
+  fetchAllProduct,
+  allorders,
+  updateOrderStatus,
+};
