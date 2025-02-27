@@ -30,7 +30,7 @@ export const { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } 
 export const fetchProducts = () => async (dispatch) => {
   dispatch(fetchProductsStart()); // Set loading to true
   try {
-    const response = await axios.get('http://localhost:4000/api/seller/get-allproducts');
+    const response = await axios.get(`https://midnight-fuel.onrender.com/api/seller/get-allproducts`);
     //console.log(response);
     dispatch(fetchProductsSuccess(response.data)); // Dispatch success with data
   } catch (error) {
