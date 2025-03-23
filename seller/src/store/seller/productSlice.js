@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+let URL = "http://localhost:4000";
 
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
 
 export const fetchProduct = createAsyncThunk('/get-product',
     async()=>{
-        const response = await axios.get(`http://localhost:4000/api/seller/get-products`,
+        const response = await axios.get(`${URL}/api/seller/get-products`,
         {withCredentials: true})
 
         return response?.data;
@@ -19,7 +20,7 @@ export const fetchProduct = createAsyncThunk('/get-product',
 
 export const addProduct = createAsyncThunk('/add',
     async(formData)=>{
-        const response = await axios.post('http://localhost:4000/api/seller/add', formData,
+        const response = await axios.post(`${URL}/api/seller/add`, formData,
         {withCredentials: true})
 
         return response?.data;
@@ -29,7 +30,7 @@ export const addProduct = createAsyncThunk('/add',
 
 export const editProduct = createAsyncThunk('/edit-product',
     async({formData, productId})=>{
-        const response = await axios.put(`http://localhost:4000/api/seller/${productId}`, formData,
+        const response = await axios.put(`${URL}/api/seller/${productId}`, formData,
         {withCredentials: true})
 
         return response?.data;
@@ -39,7 +40,7 @@ export const editProduct = createAsyncThunk('/edit-product',
 
 export const updateProduct = createAsyncThunk('/update-product',
     async({productId, price, quantity})=>{
-        const response = await axios.put(`http://localhost:4000/api/seller/edit/${productId}`,{price, quantity})
+        const response = await axios.put(`${URL}/api/seller/edit/${productId}`,{price, quantity})
 
         return response?.data;
     }
@@ -47,7 +48,7 @@ export const updateProduct = createAsyncThunk('/update-product',
 
 export const deleteProduct = createAsyncThunk('/delete-product',
     async(productId)=>{
-        const response = await axios.delete(`http://localhost:4000/api/seller/delete/${productId}`)
+        const response = await axios.delete(`${URL}/api/seller/delete/${productId}`)
 
         return response?.data;
     }

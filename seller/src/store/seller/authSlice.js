@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+let URL = "http://localhost:4000";
 
 const initialState = {
   isLoading: false,
@@ -14,7 +15,7 @@ export const registerUser = createAsyncThunk(
       
       // console.log(formData);
       const response = await axios.post(
-        "http://localhost:4000/api/seller/signup",
+        `${URL}/api/seller/signup`,
         formData,
         { withCredentials: true }
       );
@@ -29,7 +30,7 @@ export const loginUser = createAsyncThunk("/login/seller", async (formData) => {
   try {
     // console.log(formData, "s");
     const response = await axios.post(
-      "http://localhost:4000/api/seller/login",
+      `${URL}/api/seller/login`,
       formData,
       { withCredentials: true }
     );
@@ -42,7 +43,7 @@ export const loginUser = createAsyncThunk("/login/seller", async (formData) => {
 });
 
 export const logoutUser = createAsyncThunk("/logout/seller", async () => {
-  const response = await axios.get("http://localhost:4000/api/seller/logout");
+  const response = await axios.get(`${URL}/api/seller/logout`);
 
   return response.data;
 });
@@ -51,7 +52,7 @@ export const resetPassword = createAsyncThunk(
   "/resetPassword",
   async (formData) => {
     const response = await axios.post(
-      `http://localhost:4000/api/seller/reset-password`,
+      `${URL}/api/seller/reset-password`,
       formData
     );
 

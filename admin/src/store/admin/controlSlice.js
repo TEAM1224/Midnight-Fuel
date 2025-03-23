@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+let URL = "http://localhost:4000";
 
 
 const initialState = {
@@ -9,7 +10,7 @@ const initialState = {
 
 export const getUser = createAsyncThunk('/getUser', 
     async()=>{
-        const response = await axios.post('http://localhost:4000/api/admin/get-users',
+        const response = await axios.post(`${URL}/api/admin/get-users`,
             {},
             {headers : {
                 adminToken : localStorage.getItem('adminToken'),
@@ -21,7 +22,7 @@ export const getUser = createAsyncThunk('/getUser',
 
 export const getSeller = createAsyncThunk('/getseller',
     async()=>{
-        const response = await axios.post('http://localhost:4000/api/admin/get-sellers',{},
+        const response = await axios.post(`${URL}/api/admin/get-sellers`,{},
             {headers : {
                 adminToken : localStorage.getItem('adminToken'),
             }},
@@ -33,7 +34,7 @@ export const getSeller = createAsyncThunk('/getseller',
 export const verifySeller = createAsyncThunk('/verifySeler',
     async(sellerId)=>{
         try {
-            const response = await axios.post(`http://localhost:4000/api/admin/verify-seller/${sellerId}`,
+            const response = await axios.post(`${URL}/api/admin/verify-seller/${sellerId}`,
                 {},
                 {headers : {
                     adminToken : localStorage.getItem('adminToken'),
@@ -51,7 +52,7 @@ export const rejectSeller = createAsyncThunk('/rejectSeller',
     async(sellerId)=>{
         console.log("reject seller ", sellerId);
         try {
-            const response = await axios.post(`http://localhost:4000/api/admin/reject-seller/${sellerId}`,
+            const response = await axios.post(`${URL}/api/admin/reject-seller/${sellerId}`,
                 {},
                 {headers : {
                     adminToken : localStorage.getItem('adminToken'),

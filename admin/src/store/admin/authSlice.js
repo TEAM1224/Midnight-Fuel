@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+let URL = "http://localhost:4000";
+
 
 const initialState = {
   isLoading: false,
@@ -11,7 +13,7 @@ export const loginAdmin = createAsyncThunk("/login", async (formData) => {
   try {
     console.log(localStorage.getItem('adminToken'));
     const response = await axios.post(
-      "http://localhost:4000/api/admin/login",
+      `${URL}/api/admin/login`,
       formData,
       { withCredentials: true }
     );
