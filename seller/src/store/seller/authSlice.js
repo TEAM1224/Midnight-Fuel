@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-let URL = "http://localhost:4000";
+let URL = "https://midnight-fuel.onrender.com";
 
 const initialState = {
   isLoading: false,
