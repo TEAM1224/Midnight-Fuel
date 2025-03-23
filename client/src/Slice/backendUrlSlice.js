@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 // Create the slice for backendUrl
 const backendUrlSlice = createSlice({
   name: "backendUrl",
-  initialState:"http://localhost:4000",
+  initialState:apiUrl,
   reducers: {}
 });
 

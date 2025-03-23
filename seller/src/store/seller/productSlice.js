@@ -83,7 +83,14 @@ const sellerProductSlice = createSlice({
             state.isLoading = false;
             state.productsList = [];
         })
-
+        .addCase(fetchOrders.rejected,(state)=>{
+            state.isLoading = false;
+            state.ordersList = [];
+        })
+        .addCase(fetchOrders.fulfilled, (state, action)=>{
+            state.isLoading = false;
+            state.ordersList = action.payload.data;
+        })
     }
 })
 

@@ -1,37 +1,32 @@
 import React from "react";
-import { addCartItmes } from "../Slice/CartItemSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { addCartItmes } from "../Slice/CartItemSlice";
+
 function Product({ product }) {
   const dispatch = useDispatch();
-  const backendUrl = useSelector((state) => state.backendUrl);   
-  // Memoized click handler
+  const backendUrl = useSelector((state) => state.backendUrl);
   const navigate = useNavigate();
 
   const handleAddToCart = async () => {
-    // console.log(product);
-    
     try {
       const token = localStorage.getItem("token");
-      if(!token){
+      if (!token) {
         toast.error("Please login to add product to cart");
         navigate('/login');
         return;
       }
+
       const response = await axios.post(
         backendUrl + "/api/user/addtoCart",
         { productId: product._id },
-        {
-          headers: {
-            token
-          },
-        }
+        { headers: { token } }
       );
-      // console.log(response.data,"data");
+
       if (response.data.success) {
-        dispatch(addCartItmes(product.productId)); // Pass productId or full product based on the reducer's requirements
+        dispatch(addCartItmes(product.productId));
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -41,30 +36,41 @@ function Product({ product }) {
   };
 
   return (
-    <div className="border rounded-lg shadow-lg p-6 bg-slate-800 text-white transition-transform transform hover:scale-105 hover:shadow-2xl">
-      {/* Product Details */}
-      <h2 className="text-2xl font-semibold mb-2 text-gray-100">
-        {product.productName}
-      </h2>
-      <p className="text-sm text-gray-300">
-        <strong>Room No.:</strong> {product.roomNo}
-      </p>
-      <p className="text-sm text-gray-300">
-        <strong>Hostel Name:</strong> {product.hostelName}
-      </p>
-      <p className="text-sm text-gray-300">
-        <strong>Price:</strong> ₹{product.price}
-      </p>
-      <p className="text-sm text-gray-300 mb-4">
-        <strong>TotalStock:</strong> {product.totalStock}
-      </p>
+    <div className="relative border rounded-xl shadow-md p-4 bg-gray-900 text-white transition-transform transform hover:scale-105 hover:shadow-2xl w-64">
+      {/* Stock Badge */}
+      <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded-full ${product.totalStock > 0 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}>
+        {product.totalStock > 0 ? "✔ In Stock" : "❌ Out of Stock"}
+      </span>
+
+      {/* Product Image Placeholder */}
+      <div className="w-full h-28 rounded-lg bg-gradient-to-r from-gray-700 to-gray-800 flex items-center justify-center mb-3">
+        <p className="text-gray-400 text-sm">
+          <img src="" alt="image placeholder" />
+        </p>
+      </div>
+
+      {/* Product Name */}
+      <h2 className="text-lg font-semibold text-gray-100 truncate">{product.productName}</h2>
+
+      {/* Hostel & Room No */}
+      <p className="text-sm text-gray-400"><strong>🏠 Hostel:</strong> {product.hostelName}</p>
+      <p className="text-sm text-gray-400"><strong>🚪 Room:</strong> {product.roomNo}</p>
+
+      {/* Price Section */}
+      <div className="mt-3 flex items-center justify-between">
+        <span className="text-lg font-bold text-green-400">₹{product.price}</span>
+        <span className="text-xs px-2 py-1 bg-blue-600 rounded-full text-white">{product.totalStock} Left</span>
+      </div>
 
       {/* Add to Cart Button */}
       <button
         onClick={handleAddToCart}
-        className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+        className={`w-full mt-3 px-3 py-2 flex items-center justify-center rounded-lg transition duration-300 ${
+          product.totalStock > 0 ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-500 cursor-not-allowed"
+        }`}
+        disabled={product.totalStock === 0}
       >
-        Add to Cart
+        🛒 {product.totalStock > 0 ? "Add to Cart" : "Out of Stock"}
       </button>
     </div>
   );

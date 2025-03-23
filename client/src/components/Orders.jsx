@@ -18,7 +18,7 @@ function Orders() {
         });
 
         if (response.data && Array.isArray(response.data.orders)) {
-          setOrders(response.data.orders);
+          setOrders(response.data.orders.reverse());
         } else {
           setError("No orders found");
         }
@@ -37,8 +37,8 @@ function Orders() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg shadow-lg">
-      <h1 className="text-4xl font-semibold text-white text-center mb-6">Your Orders</h1>
+    <div className="max-w-5xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg"> {/* Changed background to gray-100 */}
+      <h1 className="text-4xl font-semibold text-gray-800 text-center mb-6">Your Orders</h1>
 
       {error ? (
         <div className="text-center text-lg text-red-500">{error}</div>
@@ -46,7 +46,7 @@ function Orders() {
         <div className="space-y-6">
           {orders.length > 0 ? (
             orders.map((order) => (
-              <div key={order._id} className="bg-white p-6 rounded-lg shadow-xl">
+              <div key={order._id} className="bg-white p-6 rounded-lg shadow-md"> {/* White background for cards */}
                 <div className="flex justify-between items-center border-b pb-4 mb-4">
                   <span className="text-lg font-semibold text-gray-700">Order ID: {order._id}</span>
                 </div>
@@ -71,7 +71,7 @@ function Orders() {
               </div>
             ))
           ) : (
-            <div className="text-center text-lg text-white">You have no orders yet.</div>
+            <div className="text-center text-lg text-gray-600">You have no orders yet.</div>
           )}
         </div>
       )}

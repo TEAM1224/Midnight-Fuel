@@ -7,7 +7,7 @@ function Listitems() {
   const dispatch = useDispatch();
   const [products, setProducts] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
-
+  
   useEffect(() => {
     dispatch(fetchProduct()).then((data) => {
       if (data?.payload?.data) {
